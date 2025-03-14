@@ -32,11 +32,17 @@ function Calculator() {
     }
   };
 
+  const handleBackspace = () => {
+    setInput(input.slice(0, -1)); // Removes the last character
+  };
+  
+
   return (
     <div className="calculator">
       <input type="text" value={input} readOnly />
       <div className="buttons">
         <button onClick={handleClear}>AC</button>
+        <button onClick={handleBackspace}>⌫</button>
         <button onClick={handleDelete}>DEL</button>
         <button onClick={() => handleClick("/")}>/</button>
         <button onClick={() => handleClick("*")}>*</button>
