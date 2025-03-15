@@ -1,118 +1,106 @@
+/* General Styling */
 .calculator {
   width: 300px;
   margin: 50px auto;
-  padding: 20px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #2a2a72, #009ffd);
+  padding: 15px;
+  background: #222;
+  border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
 
-input {
+/* Input Field */
+.calculator input {
   width: 100%;
-  height: 50px;
-  font-size: 1.5em;
+  height: 60px;
+  font-size: 24px;
   text-align: right;
   padding: 10px;
-  margin-bottom: 15px;
   border: none;
-  border-radius: 8px;
-  background: #f5f5f5;
-  box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  background: #333;
+  color: white;
+  outline: none;
 }
 
+/* Buttons */
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
+  margin-top: 15px;
 }
 
 button {
-  width: 100%;
   height: 50px;
-  font-size: 1.2em;
-  font-weight: bold;
+  font-size: 18px;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
+  background: #444;
+  color: white;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: 0.3s;
 }
 
 button:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
+  background: #666;
 }
 
-button:active {
-  transform: scale(0.95);
+/* Operator and Special Buttons */
+.operator {
+  background: #ff9500;
+  color: white;
 }
 
-button:nth-child(1) { background: #ff4c4c; color: white; } /* AC */
-button:nth-child(2) { background: #ff9500; color: white; } /* DEL */
-button:nth-child(3) { background: #009ffd; color: white; } /* % */
-button:nth-child(4) { background: #00c853; color: white; } /* / */
-button:nth-child(8) { background: #ffab00; color: white; } /* * */
-button:nth-child(12) { background: #ffab00; color: white; } /* - */
-button:nth-child(16) { background: #ffab00; color: white; } /* + */
-button:nth-child(20) { background: #009ffd; color: white; } /* = */
-
-
-.toggle-history {
-  width: 100%;
-  margin-top: 10px;
-  padding: 8px;
-  font-size: 14px;
-  background: #eee;
-  color: #333;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  border-radius: 4px;
+.operator:hover {
+  background: #e08900;
 }
 
-.toggle-history:hover {
-  background: #ddd;
+.equal {
+  background: #28a745;
+  grid-column: span 2;
 }
 
-.history {
-  margin-top: 10px;
+.equal:hover {
+  background: #218838;
+}
+
+/* History Section */
+.history-container {
+  margin-top: 20px;
+  text-align: left;
+  background: #333;
   padding: 10px;
-  border: 1px solid #ccc;
-  background: #f9f9f9;
-  border-radius: 4px;
+  border-radius: 5px;
+  max-height: 150px;
+  overflow-y: auto;
 }
 
-.history h3 {
-  margin-bottom: 5px;
+.history-container h3 {
   font-size: 16px;
-  color: #333;
+  color: white;
+  margin-bottom: 5px;
 }
 
-.history ul {
+.history-container ul {
   list-style: none;
   padding: 0;
-}
-
-.history li {
-  padding: 5px;
+  color: #ddd;
   font-size: 14px;
-  color: #444;
-  cursor: pointer;
 }
 
-.history li:hover {
-  background: #e0e0e0;
+.history-container li {
+  padding: 5px;
+  border-bottom: 1px solid #444;
 }
 
 .clear-history {
-  margin-top: 5px;
-  padding: 5px;
-  background: #ddd;
-  color: #222;
-  border: 1px solid #bbb;
-  cursor: pointer;
-  border-radius: 4px;
+  width: 100%;
+  margin-top: 10px;
+  background: red;
+  font-size: 14px;
 }
 
 .clear-history:hover {
-  background: #ccc;
+  background: darkred;
 }
