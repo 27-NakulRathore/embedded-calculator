@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Calculator.css";
 import { evaluate } from "mathjs"; 
 
@@ -16,18 +16,18 @@ function Calculator() {
   }, []);
 
   const handleClick = (value) => {
-    setInput(input + value);
+    setInput((prev) => prev + value);
   };
 
   const handleClear = () => {
     setInput("");
   };
 
-  const handleDelete = () => {
-    setInput(input.slice(0, -1));
-  };
+  const handleDelete = useCallback(() => {
+    setInput((prev) => prev.slice(0, -1));
+  }, []);
 
-  const handleCalculate = () => {
+  const handleCalculate = useCallback(() => {
     try {
       const result = evaluate(input).toString();
       const newHistory = [...history, `${input} = ${result}`];
@@ -40,7 +40,7 @@ function Calculator() {
     } catch (error) {
       setInput("Error");
     }
-  };
+  }, [input, history]);
 
   const handlePercentage = () => {
     if (input) {
@@ -73,7 +73,7 @@ function Calculator() {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, []);
+  }, [handleCalculate, handleDelete]);
 
   return (
     <div className="calculator">
