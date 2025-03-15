@@ -4,8 +4,16 @@ import { evaluate } from "mathjs";
 
 function Calculator() {
   const [input, setInput] = useState("");
-  const [history, setHistory] = useState([]); 
+  const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+
+  // Load history from local storage when the component mounts
+  useEffect(() => {
+    const savedHistory = localStorage.getItem("calcHistory");
+    if (savedHistory) {
+      setHistory(JSON.parse(savedHistory));
+    }
+  }, []);
 
   const handleClick = (value) => {
     setInput(input + value);
@@ -16,14 +24,19 @@ function Calculator() {
   };
 
   const handleDelete = () => {
-    setInput(input.slice(0, -1)); 
+    setInput(input.slice(0, -1));
   };
 
   const handleCalculate = () => {
     try {
       const result = evaluate(input).toString();
-      setHistory([...history, `${input} = ${result}`]); 
+      const newHistory = [...history, `${input} = ${result}`];
+
+      setHistory(newHistory);
       setInput(result);
+
+      // Save history to local storage
+      localStorage.setItem("calcHistory", JSON.stringify(newHistory));
     } catch (error) {
       setInput("Error");
     }
@@ -37,6 +50,7 @@ function Calculator() {
 
   const clearHistory = () => {
     setHistory([]);
+    localStorage.removeItem("calcHistory"); // Clear history from local storage
   };
 
   // Handle Keyboard Input
