@@ -1,88 +1,56 @@
-import React, { useState, useEffect, useCallback } from "react";
-import "./Calculator.css";
+import React, { useState } from "react";
+import "./Calculator.css"; 
 import { evaluate } from "mathjs"; 
 
 function Calculator() {
   const [input, setInput] = useState("");
   const [history, setHistory] = useState([]);
-  const [showHistory, setShowHistory] = useState(false);
-
-  // Load history from local storage when the component mounts
-  useEffect(() => {
-    const savedHistory = localStorage.getItem("calcHistory");
-    if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
-    }
-  }, []);
+  const [copied, setCopied] = useState(false); // State to show "Copied!" message
 
   const handleClick = (value) => {
-    setInput((prev) => prev + value);
+    setInput(input + value);
   };
 
   const handleClear = () => {
     setInput("");
   };
 
-  const handleDelete = useCallback(() => {
-    setInput((prev) => prev.slice(0, -1));
-  }, []);
+  const handleDelete = () => {
+    setInput(input.slice(0, -1));
+  };
 
-  const handleCalculate = useCallback(() => {
+  const handleCalculate = () => {
     try {
       const result = evaluate(input).toString();
-      const newHistory = [...history, `${input} = ${result}`];
-
-      setHistory(newHistory);
+      setHistory([...history, `${input} = ${result}`]);
       setInput(result);
-
-      // Save history to local storage
-      localStorage.setItem("calcHistory", JSON.stringify(newHistory));
     } catch (error) {
       setInput("Error");
     }
-  }, [input, history]);
+  };
 
-  const handlePercentage = () => {
+  const handleCopyResult = () => {
     if (input) {
-      setInput((parseFloat(input) / 100).toString());
+      navigator.clipboard.writeText(input); // Copy to clipboard
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500); // Hide "Copied!" after 1.5s
     }
   };
-
-  const clearHistory = () => {
-    setHistory([]);
-    localStorage.removeItem("calcHistory"); // Clear history from local storage
-  };
-
-  // Handle Keyboard Input
-  useEffect(() => {
-    const handleKeyPress = (event) => {
-      const { key } = event;
-
-      if (!isNaN(key) || ["+", "-", "*", "/", "."].includes(key)) {
-        setInput((prev) => prev + key);
-      } else if (key === "Enter") {
-        handleCalculate();
-      } else if (key === "Backspace") {
-        handleDelete();
-      } else if (key === "Escape") {
-        handleClear();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyPress);
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [handleCalculate, handleDelete]);
 
   return (
     <div className="calculator">
       <input type="text" value={input} readOnly />
 
+      {/* Copy Button */}
+      <button className="copy-btn" onClick={handleCopyResult}>
+        📋 Copy Result
+      </button>
+      {copied && <span className="copied-msg">Copied!</span>} {/* Show "Copied!" */}
+
       <div className="buttons">
         <button className="operator" onClick={handleClear}>AC</button>
         <button className="operator" onClick={handleDelete}>⌫</button>
-        <button onClick={handlePercentage}>%</button>
+        <button onClick={() => handleClick("%")}>%</button>
         <button className="operator" onClick={() => handleClick("/")}>/</button>
 
         <button onClick={() => handleClick("7")}>7</button>
@@ -104,22 +72,6 @@ function Calculator() {
         <button onClick={() => handleClick(".")}>.</button>
         <button className="equal" onClick={handleCalculate}>=</button>
       </div>
-
-      <button className="show-history" onClick={() => setShowHistory(!showHistory)}>
-        {showHistory ? "Hide History" : "Show History"}
-      </button>
-
-      {showHistory && (
-        <div className="history-container">
-          <h3>Calculation History</h3>
-          <ul>
-            {history.map((entry, index) => (
-              <li key={index}>{entry}</li>
-            ))}
-          </ul>
-          <button className="clear-history" onClick={clearHistory}>Clear History</button>
-        </div>
-      )}
     </div>
   );
 }
